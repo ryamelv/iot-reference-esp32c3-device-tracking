@@ -235,7 +235,7 @@ menu "Featured FreeRTOS IoT Integration"
 
     config GRI_TRANSPORT_TIMEOUT_MS
         int "TLS Transport Send / Receive timeout in milliseconds"
-        default 1000
+        default 5000
 
 
     menu "coreMQTT-Agent Manager Configurations"
