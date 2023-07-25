@@ -288,7 +288,7 @@ menu "Featured FreeRTOS IoT Integration"
     config GRI_ENABLE_SUB_PUB_UNSUB_DEMO
         bool "Enable pub sub unsub demo"
         depends on !GRI_RUN_QUALIFICATION_TEST
-        default y
+        default n
 
     menu "Sub pub unsub demo configurations"
         depends on GRI_ENABLE_SUB_PUB_UNSUB_DEMO
@@ -341,7 +341,7 @@ menu "Featured FreeRTOS IoT Integration"
     config GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO
         bool "Enable temperature sensor pub sub and LED control demo"
         depends on !GRI_RUN_QUALIFICATION_TEST
-        default y
+        default n
 
     menu "Temperature pub sub and LED control demo configurations"
         depends on GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO
@@ -411,7 +411,7 @@ menu "Featured FreeRTOS IoT Integration"
     config GRI_ENABLE_OTA_DEMO
         bool "Enable OTA demo"
         depends on !GRI_RUN_QUALIFICATION_TEST
-        default y
+        default n
 
     menu "OTA demo configurations"
         depends on GRI_ENABLE_OTA_DEMO
@@ -469,6 +469,35 @@ menu "Featured FreeRTOS IoT Integration"
             default 0
 
     endmenu # OTA demo configurations
+
+    config GRI_ENABLE_DEVICE_TRACKING_DEMO
+        bool "Enable device tracking demo"
+        depends on !GRI_RUN_QUALIFICATION_TEST
+        default y
+
+    menu "Device tracking demo configurations"
+        depends on GRI_ENABLE_DEVICE_TRACKING_DEMO
+
+        config GRI_DEVICE_TRACKING_DEMO_QOS_LEVEL
+            int "QoS level of MQTT operations"
+            default 1
+            range 0 2
+            help
+                The QoS level of MQTT messages sent by this demo.
+
+        config GRI_DEVICE_TRACKING_DEMO_TASK_PRIORITY
+            int "Device tracking task priority."
+            default 1
+            help
+                The task priority of the device tracker tasks.
+
+        config GRI_DEVICE_TRACKING_DEMO_TASK_STACK_SIZE
+            int "Device tracking task stack size."
+            default 4096
+            help
+                The task stack size for for the device tracking tasks.
+
+    endmenu # Device tracking demo configurations
 
 endmenu # Golden Reference Integration
 

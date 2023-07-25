@@ -26,6 +26,13 @@ if(CONFIG_GRI_ENABLE_OTA_DEMO)
     list(APPEND MAIN_SRCS "demo_tasks/ota_over_mqtt_demo/ota_over_mqtt_demo.c")
 endif()
 
+# Device tracking demo
+if(CONFIG_GRI_ENABLE_DEVICE_TRACKING_DEMO)
+    list(APPEND MAIN_SRCS
+        "demo_tasks/device_tracking_demo/device_tracking_demo.c"
+    )
+endif()
+
 # Qualification Test
 if( CONFIG_GRI_RUN_QUALIFICATION_TEST )
     list(APPEND MAIN_SRCS 
@@ -40,6 +47,7 @@ set(MAIN_INCLUDE_DIRS
     "demo_tasks/sub_pub_unsub_demo"
     "demo_tasks/temp_sub_pub_and_led_control_demo"
     "demo_tasks/temp_sub_pub_and_led_control_demo/hardware_drivers"
+    "demo_tasks/device_tracking_demo"
     "networking/wifi"
     "networking/mqtt"
 )

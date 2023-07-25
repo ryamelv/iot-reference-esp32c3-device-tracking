@@ -69,6 +69,10 @@
     #include "ota_over_mqtt_demo.h"
 #endif /* CONFIG_GRI_ENABLE_OTA_DEMO */
 
+#if CONFIG_GRI_ENABLE_DEVICE_TRACKING_DEMO
+    #include "device_tracking_demo.h"
+#endif /* CONFIG_GRI_ENABLE_DEVICE_TRACKING_DEMO */
+
 #if CONFIG_GRI_RUN_QUALIFICATION_TEST
     #include "qualification_wrapper_config.h"
 #endif /* CONFIG_GRI_RUN_QUALIFICATION_TEST */
@@ -274,10 +278,14 @@ static void prvStartEnabledDemos( void )
             }
         #endif /* CONFIG_GRI_ENABLE_OTA_DEMO */
 
-        /* Initialize and start the coreMQTT-Agent network manager. This handles
-         * establishing a TLS connection and MQTT connection to the MQTT broker.
-         * This needs to be started before starting WiFi so it can handle WiFi
-         * connection events. */
+        #if CONFIG_GRI_ENABLE_DEVICE_TRACKING_DEMO
+            vStartDeviceTrackingDemo();
+        #endif /* CONFIG_GRI_ENABLE_DEVICE_TRACKING_DEMO */
+
+    /* Initialize and start the coreMQTT-Agent network manager. This handles
+     * establishing a TLS connection and MQTT connection to the MQTT broker.
+     * This needs to be started before starting WiFi so it can handle WiFi
+     * connection events. */
         xResult = xCoreMqttAgentManagerStart( &xNetworkContext );
 
         if( xResult != pdPASS )
