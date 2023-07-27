@@ -30,6 +30,11 @@ endif()
 if(CONFIG_GRI_ENABLE_DEVICE_TRACKING_DEMO)
     list(APPEND MAIN_SRCS
         "demo_tasks/device_tracking_demo/device_tracking_demo.c"
+        "demo_tasks/device_tracking_demo/device_tracking/device_tracking.c"
+        "demo_tasks/device_tracking_demo/device_tracking/iot_agent.c"
+        "demo_tasks/device_tracking_demo/device_tracking/iot_standalone.c"
+        "demo_tasks/device_tracking_demo/device_tracking/ui_enabled.c"
+        "demo_tasks/device_tracking_demo/device_tracking/ui_disabled.c"
     )
 endif()
 

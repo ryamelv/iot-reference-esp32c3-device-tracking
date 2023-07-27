@@ -485,17 +485,23 @@ menu "Featured FreeRTOS IoT Integration"
             help
                 The QoS level of MQTT messages sent by this demo.
 
-        config GRI_DEVICE_TRACKING_DEMO_TASK_PRIORITY
-            int "Device tracking task priority."
-            default 1
+        config GRI_DEVICE_TRACKING_DEMO_PRODUCER_TASK_PRIORITY
+            int "Device tracking producer task priority."
+            default 3
             help
-                The task priority of the device tracker tasks.
+                The producer task reads location from GPS hardware into a queue.
+
+        config GRI_DEVICE_TRACKING_DEMO_UPLOAD_TASK_PRIORITY
+            int "Device tracking upload task priority."
+            default 2
+            help
+                The upload task sends queued location points to AWS IoT.
 
         config GRI_DEVICE_TRACKING_DEMO_TASK_STACK_SIZE
-            int "Device tracking task stack size."
-            default 4096
+            int "Stack size in *words* for each device tracking task."
+            default 2048
             help
-                The task stack size for for the device tracking tasks.
+                For a 32-bit CPU, the stack size in *bytes* will be 4x words.
 
     endmenu # Device tracking demo configurations
 
