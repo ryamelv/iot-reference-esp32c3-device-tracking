@@ -911,6 +911,11 @@ static void prvCoreMqttAgentEventHandler( void * pvHandlerArg,
 
 /* Public function definitions ************************************************/
 
+const char* xCoreMqttAgentManagerGetClientId( void )
+{
+  return configCLIENT_IDENTIFIER;
+}
+
 BaseType_t xCoreMqttAgentManagerPost( int32_t lEventId )
 {
     esp_err_t xEspErrRet;

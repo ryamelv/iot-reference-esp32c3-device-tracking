@@ -62,4 +62,11 @@ BaseType_t xCoreMqttAgentManagerStart( NetworkContext_t * pxNetworkContextIn );
  */
 BaseType_t xCoreMqttAgentManagerPost( int32_t lEventId );
 
+/**
+ * @brief Exposes the MQTT client identifier in use by the coreMQTT-Agent.
+ *
+ * @return MQTT client identifier in use by the coreMQTT-Agent.
+ */
+const char* xCoreMqttAgentManagerGetClientId( void );
+
 #endif /* CORE_MQTT_AGENT_NETWORK_MANAGER_H */
