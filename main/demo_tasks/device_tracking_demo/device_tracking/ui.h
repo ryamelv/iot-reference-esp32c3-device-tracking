@@ -17,16 +17,8 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "lvgl/lvgl.h"
 #include "device_tracking/device_tracking_config.h"
-
-// Avoid dependency on LVGL if user interface is disabled.
-#if DT_UI_ENABLED
-  #include "lvgl.h"
-#else
-  typedef void lv_obj_t;
-  typedef void* lv_event_t;
-  #define LV_EVENT_PRESSED 0
-#endif
 
 
 

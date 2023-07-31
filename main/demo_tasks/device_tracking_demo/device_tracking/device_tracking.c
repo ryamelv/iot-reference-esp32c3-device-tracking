@@ -29,7 +29,7 @@
 #include "core_mqtt.h"
 #include "core_mqtt_agent_manager.h"
 #include "core_mqtt_agent_manager_events.h"
-//#include "core2forAWS.h"
+#include "core2forAWS.h"
 #include "device_tracking/device_tracking_config.h"
 #include "device_tracking/iot.h"
 #include "device_tracking/ui.h"
@@ -171,8 +171,7 @@ static void GetMockGpsPoint(struct GpsPoint* gps_point) {
   // Read current accelerometer hardware values.
   float xA = 0, yA = 0, zA = 0;
 
-  // TODO
-  //MPU6886_GetAccelData(&xA, &yA, &zA);
+  MPU6886_GetAccelData(&xA, &yA, &zA);
 
   gps_point->sampleTime = time(NULL);
 
@@ -380,6 +379,10 @@ static void OnBtnEvent(UiButton btn, lv_event_t event) {
 
 static bool DeviceTrackingInit(MQTTAgentContext_t* mqtt_agent_context) {
   g_mqtt_agent = mqtt_agent_context;
+
+  Core2ForAWS_Init();
+  //Core2ForAWS_Display_SetBrightness(80);
+  Core2ForAWS_LED_Enable(1);
 
   // MQTT topic name
   sprintf(g_mqtt_topic_name, "%s%s", IotGetClientId(), DT_MQTT_PUBLISH_TOPIC_POSTFIX);

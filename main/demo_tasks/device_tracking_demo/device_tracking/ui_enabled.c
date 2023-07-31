@@ -48,7 +48,7 @@ static lv_obj_t* obj_wifi_label;
 
 static lv_obj_t* obj_btn[BTN_COUNT];
 static lv_obj_t* obj_btn_txt[BTN_COUNT];
-static btn_event_cb_t obj_btn_cb[BTN_COUNT];
+static lv_event_cb_t obj_btn_cb[BTN_COUNT];
 
 // Obtained from lv_obj.h's definition of lv_event_t.
 static const char* const LV_EVENT_NAMES[] = {
@@ -199,13 +199,13 @@ static void ui_txt_add(lv_obj_t* txt, const char* base_txt, const char* param, s
 
 
 void UiHdrTxtSet(const char* txt, const char* param, size_t param_len) {
-  ui_txt_set(obj_hdr_txt, base_txt, param, param_len);
+  ui_txt_set(obj_hdr_txt, txt, param, param_len);
 }
 
 
 
 void UiOutTxtAdd(const char* txt, const char* param, size_t param_len) {
-  ui_txt_add(obj_out_txt, base_txt, param, param_len);
+  ui_txt_add(obj_out_txt, txt, param, param_len);
 }
 
 

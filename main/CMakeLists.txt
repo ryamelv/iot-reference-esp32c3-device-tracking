@@ -70,6 +70,7 @@ set(MAIN_REQUIRES
     FreeRTOS-Libraries-Integration-Tests
     unity
     driver
+    core2forAWS
 )
 
 idf_component_register(
