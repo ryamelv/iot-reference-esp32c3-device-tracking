@@ -144,14 +144,6 @@ static BaseType_t prvInitializeNetworkContext( void )
         xRet = pdFAIL;
     }
 
-    if( strlen( CONFIG_GRI_THING_NAME ) == 0 )
-    {
-        ESP_LOGE( TAG, "Empty thingname for MQTT broker. Set thing name by "
-                       "running idf.py menuconfig, then Golden Reference Integration -> "
-                       "Thing name." );
-        xRet = pdFAIL;
-    }
-
     /* Initialize network context. */
 
     xNetworkContext.pcHostname = CONFIG_GRI_MQTT_ENDPOINT;
@@ -354,13 +346,28 @@ void app_main( void )
      * starting WiFi and the coreMQTT-Agent network manager. */
     ESP_ERROR_CHECK( esp_event_loop_create_default() );
 
+    /* Init WiFi, which is a pre-requisite for getting the MAC address, which may be configured for us as the
+     * MQTT client identifier. */
+    app_wifi_init();
+
+    /* Satisfy the MQTT manager's requirement to initialize its client identifier prior to going multi-threaded. */
+    const char* clientId = xCoreMqttAgentManagerGetClientId();
+
+    if( clientId == NULL )
+    {
+        ESP_LOGE( TAG, "MQTT client identifier NULL; check project configuration." );
+    } else
+    {
+        ESP_LOGI( TAG, "MQTT client identifier: %s", clientId );
+    }
+
     /* Start demo tasks. This needs to be done before starting WiFi and
      * and the coreMQTT-Agent network manager so demos can
      * register their coreMQTT-Agent event handlers before events happen. */
     prvStartEnabledDemos();
 
     /* Start WiFi. */
-    app_wifi_init();
+    //app_wifi_init();
     app_wifi_start( POP_TYPE_MAC );
 }
 

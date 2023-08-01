@@ -79,7 +79,8 @@ static const char* const DT_MQTT_PUBLISH_TOPIC_POSTFIX = "/location";
 //
 
 // Cadence of sampling GPS location points for upload to AWS IoT, in milliseconds.
-static const uint32_t DT_GPS_POINT_PERIOD_IN_MS = 10000;
+//static const uint32_t DT_GPS_POINT_PERIOD_IN_MS = 10000;
+static const uint32_t DT_GPS_POINT_PERIOD_IN_MS = 200;
 
 // GPS location point buffer size, in minutes. Used when, for example, network connection is down.
 static const uint32_t DT_GPS_POINT_BUFFER_DURATION_IN_MIN = 10;
@@ -92,10 +93,10 @@ static const uint32_t DT_GPS_POINT_BUFFER_DURATION_IN_MS = DT_GPS_POINT_BUFFER_D
 static const uint32_t DT_GPS_MOCK_CALC_PERIOD_IN_MS = 50;
 
 // Mock GPS is not absolute; it must be relative to a given starting point.
-//const double DT_GPS_MOCK_START_LAT = 44.98421;     // Amazon MSP12
-//const double DT_GPS_MOCK_START_LON = -93.27502;
-static const double DT_GPS_MOCK_START_LAT = 44.81584;
-static const double DT_GPS_MOCK_START_LON = -93.63705;
+static const double DT_GPS_MOCK_START_LAT = 44.98421;     // Amazon MSP12
+static const double DT_GPS_MOCK_START_LON = -93.27502;
+//static const double DT_GPS_MOCK_START_LAT = 44.81584;
+//static const double DT_GPS_MOCK_START_LON = -93.63705;
 
 // Whether to mock GPS points (i.e., 'drive' based on tilting the device) or use GPS hardware module accessory.
 static const bool DT_GPS_MOCK_DEFAULT = true;

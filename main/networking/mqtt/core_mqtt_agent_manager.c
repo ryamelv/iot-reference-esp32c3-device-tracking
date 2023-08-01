@@ -43,6 +43,7 @@
 #include <esp_err.h>
 #include <esp_log.h>
 #include <sdkconfig.h>
+#include <esp_wifi.h>
 #include <esp_wifi_types.h>
 #include <esp_netif_types.h>
 
@@ -350,6 +351,57 @@ static uint32_t prvGetTimeMs( void )
     return ulTimeMs;
 }
 
+static esp_err_t prvGetMac(char* buf)
+{
+    static const int MAC_BYTE_CNT = 6;
+    static const int MAC_STR_LEN = (2 * MAC_BYTE_CNT) + (MAC_BYTE_CNT - 1) + 1;
+
+    uint8_t eth_mac[MAC_BYTE_CNT];
+    memset( eth_mac, 0, sizeof(eth_mac) );
+
+    esp_err_t err = esp_wifi_get_mac( WIFI_IF_STA, eth_mac );
+
+    if( err != ESP_OK )
+    {
+        ESP_LOGE( TAG, "esp_wifi_get_mac() failed." );
+    }
+
+    /* Fill buff regardless of success/failure ("00:00:00:00:00:00" is better than nothing). */
+    snprintf( buf, MAC_STR_LEN, "%02X:%02X:%02X:%02X:%02X:%02X",
+              eth_mac[0], eth_mac[1], eth_mac[2], eth_mac[3], eth_mac[4], eth_mac[5] );
+
+    return err;
+}
+
+static const char* prvGetClientId()
+{
+    /* Not thread-safe due to filling a static buffer on first-use. Must be called one-time prior to use in a
+     * multi-threaded environment, probably via calling xCoreMqttAgentManagerGetClientId() from app_main(). Could have
+     * instead used a mutex, but that would have imposed calling xCoreMqttAgentManagerStart() (to init the mutex)
+     * prior to multi-threading and that wouldn't be any less imposing since the current behavior of app_main() in
+     * this reference goes multi-threaded prior to calling xCoreMqttAgentManagerStart(). Could have also required
+     * callers to supply a buffer, but that would make each of them more complex. */
+
+    static char clientId[64];
+    memset( clientId, 0, sizeof(clientId) );
+
+    switch( CONFIG_GRI_THING_NAME_SOURCE )
+    {
+        case 1: /* MAC */
+            prvGetMac( clientId );
+            break;
+
+        case 2: /* CONFIG */
+            strncpy( clientId, CONFIG_GRI_THING_NAME, sizeof(clientId) );
+            break;
+
+        default:
+            ESP_LOGE( TAG, "Unknown CONFIG_GRI_THING_NAME_SOURCE value: %d", CONFIG_GRI_THING_NAME_SOURCE );
+    }
+
+    return clientId;
+}
+
 static void prvIncomingPublishCallback( MQTTAgentContext_t * pMqttAgentContext,
                                         uint16_t packetId,
                                         MQTTPublishInfo_t * pxPublishInfo )
@@ -615,8 +667,8 @@ static MQTTStatus_t prvCoreMqttAgentConnect( bool xCleanSession )
     /* The client identifier is used to uniquely identify this MQTT client to
      * the MQTT broker. In a production device the identifier can be something
      * unique, such as a device serial number. */
-    xConnectInfo.pClientIdentifier = configCLIENT_IDENTIFIER;
-    xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( configCLIENT_IDENTIFIER );
+    xConnectInfo.pClientIdentifier = prvGetClientId();
+    xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( prvGetClientId() );
 
     /* Set MQTT keep-alive period. It is the responsibility of the application
      * to ensure that the interval between Control Packets being sent does not
@@ -913,7 +965,7 @@ static void prvCoreMqttAgentEventHandler( void * pvHandlerArg,
 
 const char* xCoreMqttAgentManagerGetClientId( void )
 {
-  return configCLIENT_IDENTIFIER;
+  return prvGetClientId();
 }
 
 BaseType_t xCoreMqttAgentManagerPost( int32_t lEventId )

@@ -410,7 +410,7 @@ BaseType_t DeviceTrackingLaunch(MQTTAgentContext_t* mqtt_agent_context) {
 
   ESP_LOGI(TAG, "Launching Device Tracking app...");
   ESP_LOGI(TAG, "AWS IoT SDK coreMQTT version: %s", MQTT_LIBRARY_VERSION);
-  ESP_LOGI(TAG, "AWS IoT Client ID: %s", IotGetClientId());
+  ESP_LOGI(TAG, "AWS IoT MQTT Client ID: %s", IotGetClientId());
 
   if(!DeviceTrackingInit(mqtt_agent_context)) {
     return(pdFAIL);

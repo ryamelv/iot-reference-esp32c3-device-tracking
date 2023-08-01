@@ -65,6 +65,9 @@ BaseType_t xCoreMqttAgentManagerPost( int32_t lEventId );
 /**
  * @brief Exposes the MQTT client identifier in use by the coreMQTT-Agent.
  *
+ * Due to use of a static buffer that is filled-in on first-use, must be
+ * called once prior to multi-threaded use.
+ *
  * @return MQTT client identifier in use by the coreMQTT-Agent.
  */
 const char* xCoreMqttAgentManagerGetClientId( void );

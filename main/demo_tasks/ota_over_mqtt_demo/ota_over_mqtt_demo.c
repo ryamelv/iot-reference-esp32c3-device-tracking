@@ -999,7 +999,7 @@ static void prvOTADemoTask( void * pvParam )
 
         if( ( otaRet = OTA_Init( &otaBuffer,
                                  &otaInterfaces,
-                                 ( const uint8_t * ) ( otademoconfigCLIENT_IDENTIFIER ),
+                                 ( const uint8_t * ) ( xCoreMqttAgentManagerGetClientId() ),
                                  prvOtaAppCallback ) ) != OtaErrNone )
         {
             ESP_LOGE( TAG, "Failed to initialize OTA Agent, exiting = %u.",
@@ -1160,8 +1160,8 @@ bool vOTAProcessMessage( void * pvIncomingPublishCallbackContext,
 
         isMatch = prvMatchClientIdentifierInTopic( pxPublishInfo->pTopicName,
                                                    pxPublishInfo->topicNameLength,
-                                                   otademoconfigCLIENT_IDENTIFIER,
-                                                   strlen( otademoconfigCLIENT_IDENTIFIER ) );
+                                                   xCoreMqttAgentManagerGetClientId(),
+                                                   strlen( xCoreMqttAgentManagerGetClientId() ) );
 
         if( isMatch == true )
         {

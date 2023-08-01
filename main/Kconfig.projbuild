@@ -224,6 +224,22 @@ menu "Featured FreeRTOS IoT Integration"
         depends on !GRI_RUN_QUALIFICATION_TEST
         default 8883
 
+    choice GRI_THING_NAME_SOURCE
+        prompt "Thing name source"
+        default GRI_THING_NAME_SOURCE_MAC
+        help
+            From whence to get the thing name (client id)
+        config GRI_THING_NAME_SOURCE_MAC
+            bool "MAC"
+        config GRI_THING_NAME_SOURCE_CONFIG
+            bool "Configuration"
+    endchoice
+
+    config GRI_THING_NAME_SOURCE
+        int
+        default 1 if GRI_THING_NAME_SOURCE_MAC
+        default 2 if GRI_THING_NAME_SOURCE_CONFIG
+
     config GRI_THING_NAME
         string "Thing name"
         depends on !GRI_RUN_QUALIFICATION_TEST
