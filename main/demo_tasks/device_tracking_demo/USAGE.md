@@ -18,7 +18,7 @@ additions:
 
 Ignore the specific references to the ESP32-C3 model - this fork is intended to be compatible with all ESP32 models.
 
-By its nature, this demo app is only interesting on devices with an inertial measurement unit (IMO, aka accelerometer)
+By its nature, this demo app is only interesting on devices with an inertial measurement unit (IMU, aka accelerometer)
 or GPS hardware. For example, an [M5stack Core2](https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit).
 Most [Espressif development boards](https://www.espressif.com/en/products/devkits) do not have this hardware.
 
@@ -62,8 +62,8 @@ Implied in the instructions is availability of the idf.py script that is part of
 Framework (ESP-IDF)](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/index.html). One *does* need the
 ESP-IDF, but does not necessarily need to have a full iot-reference-esp32c3 project directory. After installing the
 ESP-IDF (for example, using the basic [ESP-IDF Windows Installer](https://dl.espressif.com/dl/esp-idf/)), a command
-similar to the following command can be used to flash and monitor the device. Customize the paths and COM port as
-needed. The referenced .bin files constitute the built image.
+similar to the following can be used to flash and monitor the device. Customize the paths and COM port as needed.
+The referenced .bin files constitute the built image.
 
 ```
 C:\Espressif\python_env\idf5.1_py3.11_env\Scripts\python.exe C:\Espressif\frameworks\esp-idf-v5.1\components\esptool_py\esptool\esptool.py -p COM4 -b 460800 --before default_reset --after hard_reset --chip esp32  write_flash --flash_mode dio --flash_size 4MB --flash_freq 40m 0x1000 build\bootloader\bootloader.bin 0xb000 build\partition_table\partition-table.bin 0x19000 build\ota_data_initial.bin 0x20000 build\FeaturedFreeRTOSIoTIntegration.bin
