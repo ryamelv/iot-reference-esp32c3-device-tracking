@@ -346,7 +346,7 @@ void app_main( void )
      * starting WiFi and the coreMQTT-Agent network manager. */
     ESP_ERROR_CHECK( esp_event_loop_create_default() );
 
-    /* Init WiFi, which is a pre-requisite for getting the MAC address, which may be configured for us as the
+    /* Init WiFi, which is a pre-requisite for getting the MAC address, which may be configured for use as the
      * MQTT client identifier. */
     app_wifi_init();
 
@@ -367,7 +367,6 @@ void app_main( void )
     prvStartEnabledDemos();
 
     /* Start WiFi. */
-    //app_wifi_init();
     app_wifi_start( POP_TYPE_MAC );
 }
 
