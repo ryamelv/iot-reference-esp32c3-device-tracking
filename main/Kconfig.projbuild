@@ -224,6 +224,14 @@ menu "Featured FreeRTOS IoT Integration"
         depends on !GRI_RUN_QUALIFICATION_TEST
         default 8883
 
+    config GRI_MQTT_ENDPOINT_PREPEND_THING_NAME
+        bool "Prepend thing name to MQTT endpoint?"
+        default n
+        help
+            Prepend thing name as a sub-domain to the MQTT endpoint. Only meaningful when using a custom CNAME
+            record for the MQTT endpoint, as then each device can be directed individually to different MQTT endpoints
+            by changing its CNAME record.
+
     choice GRI_THING_NAME_SOURCE
         prompt "Thing name source"
         default GRI_THING_NAME_SOURCE_MAC

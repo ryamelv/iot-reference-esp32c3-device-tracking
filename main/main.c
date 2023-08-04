@@ -126,6 +126,56 @@ static void prvStartEnabledDemos( void );
 
 /* Static function definitions ************************************************/
 
+static void prvMakeDnsSafe(char* str)
+{
+    const char xSafeChar = '-';
+
+    for( int i = 0; str[i] != NULL; ++i )
+    {
+        if( str[i] != '.' && str[i] != '-' )
+        {
+            /* Using ASCII table ranges to expedite check. */
+            if( ( str[i] < '0' )                 ||
+                ( str[i] > '9' && str[i] < 'A' ) ||
+                ( str[i] > 'Z' && str[i] < 'a' ) ||
+                ( str[i] > 'z' ) )
+            {
+                str[i] = xSafeChar;
+            }
+        }
+    }
+}
+
+static const char* prvGetMqttEndpoint( void )
+{
+#if !CONFIG_GRI_MQTT_ENDPOINT_PREPEND_THING_NAME
+    return CONFIG_GRI_MQTT_ENDPOINT;
+#else
+    static char* xMqttEndpoint = NULL;
+
+    if( !xMqttEndpoint )
+    {
+      xMqttEndpoint = malloc( strlen( xCoreMqttAgentManagerGetClientId() ) + strlen( CONFIG_GRI_MQTT_ENDPOINT ) + 2 );
+
+      if( !xMqttEndpoint )
+      {
+          ESP_LOGE( TAG, "Memory allocation for MQTT endpoint failed." );
+      }
+      else
+      {
+          strcpy( xMqttEndpoint, xCoreMqttAgentManagerGetClientId() );
+          strcat( xMqttEndpoint, "." );
+          strcat( xMqttEndpoint, CONFIG_GRI_MQTT_ENDPOINT );
+
+          /* Replace characters (in the client id, specifically) not valid in DNS record values. */
+          prvMakeDnsSafe( xMqttEndpoint );
+      }
+    }
+
+    return xMqttEndpoint;
+#endif
+}
+
 static BaseType_t prvInitializeNetworkContext( void )
 {
     /* This is returned by this function. */
@@ -136,7 +186,7 @@ static BaseType_t prvInitializeNetworkContext( void )
 
     /* Verify that the MQTT endpoint and thing name have been configured by the
      * user. */
-    if( strlen( CONFIG_GRI_MQTT_ENDPOINT ) == 0 )
+    if( strlen( prvGetMqttEndpoint() ) == 0 )
     {
         ESP_LOGE( TAG, "Empty endpoint for MQTT broker. Set endpoint by "
                        "running idf.py menuconfig, then Golden Reference Integration -> "
@@ -146,7 +196,7 @@ static BaseType_t prvInitializeNetworkContext( void )
 
     /* Initialize network context. */
 
-    xNetworkContext.pcHostname = CONFIG_GRI_MQTT_ENDPOINT;
+    xNetworkContext.pcHostname = prvGetMqttEndpoint();
     xNetworkContext.xPort = CONFIG_GRI_MQTT_PORT;
     xNetworkContext.xTimeout = pdMS_TO_TICKS( CONFIG_GRI_TRANSPORT_TIMEOUT_MS );
 
@@ -317,17 +367,7 @@ void app_main( void )
     /* This is used to store the error return of ESP-IDF functions. */
     esp_err_t xEspErrRet;
 
-    /* Initialize global network context. */
-    xRet = prvInitializeNetworkContext();
-
-    if( xRet != pdPASS )
-    {
-        ESP_LOGE( TAG, "Failed to initialize global network context." );
-        return;
-    }
-
-    /* Initialize NVS partition. This needs to be done before initializing
-     * WiFi. */
+    /* Initialize NVS partition. This needs to be done before initializing WiFi. */
     xEspErrRet = nvs_flash_init();
 
     if( ( xEspErrRet == ESP_ERR_NVS_NO_FREE_PAGES ) ||
@@ -360,6 +400,17 @@ void app_main( void )
     {
         ESP_LOGI( TAG, "MQTT client identifier: %s", clientId );
     }
+
+    /* Initialize global network context. */
+    xRet = prvInitializeNetworkContext();
+
+    if( xRet != pdPASS )
+    {
+        ESP_LOGE( TAG, "Failed to initialize global network context." );
+        return;
+    }
+
+    ESP_LOGI( TAG, "MQTT endpoint: %s:%d", xNetworkContext.pcHostname, xNetworkContext.xPort );
 
     /* Start demo tasks. This needs to be done before starting WiFi and
      * and the coreMQTT-Agent network manager so demos can
