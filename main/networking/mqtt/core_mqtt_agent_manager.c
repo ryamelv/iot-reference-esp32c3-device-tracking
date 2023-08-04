@@ -382,21 +382,23 @@ static const char* prvGetClientId()
      * this reference goes multi-threaded prior to calling xCoreMqttAgentManagerStart(). Could have also required
      * callers to supply a buffer, but that would make each of them more complex. */
 
-    static char clientId[64];
-    memset( clientId, 0, sizeof(clientId) );
+    static char clientId[64] = { 0 };
 
-    switch( CONFIG_GRI_THING_NAME_SOURCE )
+    if( clientId[0] == 0 )
     {
-        case 1: /* MAC */
-            prvGetMac( clientId );
-            break;
+        switch( CONFIG_GRI_THING_NAME_SOURCE )
+        {
+            case 1: /* MAC */
+                prvGetMac( clientId );
+                break;
 
-        case 2: /* CONFIG */
-            strncpy( clientId, CONFIG_GRI_THING_NAME, sizeof(clientId) );
-            break;
+            case 2: /* CONFIG */
+                strncpy( clientId, CONFIG_GRI_THING_NAME, sizeof(clientId) );
+                break;
 
-        default:
-            ESP_LOGE( TAG, "Unknown CONFIG_GRI_THING_NAME_SOURCE value: %d", CONFIG_GRI_THING_NAME_SOURCE );
+            default:
+                ESP_LOGE( TAG, "Unknown CONFIG_GRI_THING_NAME_SOURCE value: %d", CONFIG_GRI_THING_NAME_SOURCE );
+        }
     }
 
     return clientId;
