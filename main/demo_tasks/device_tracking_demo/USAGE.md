@@ -40,9 +40,15 @@ instructions to configure the cloud-side, including creation of an AWS IoT thing
 Use the project level [Provision...](../../../GettingStartedGuide.md#23-provision-the-esp32-c3-with-the-private-key-device-certificate-and-ca-certificate-in-development-mode)
 instructions to write the device cert/key to a persistent partition of the device's flash.
 
-Implied in the instructions is availability of the configure_esp_secure_cert.py script. If you have built the image
-then it will be in the managed_components/espressif__esp_secure_cert_mgr/tools directory of your project. Otherwise,
+Implied in the instructions is availability of the `configure_esp_secure_cert.py` script. If you have built the image
+then it will be in the `managed_components/espressif__esp_secure_cert_mgr/tools` directory of your project. Otherwise,
 you may need to clone or download the [esp_secure_cert_mgr](https://github.com/espressif/esp_secure_cert_mgr) project.
+
+Note that if you obtain your own copy of the [esp_secure_cert_mgr](https://github.com/espressif/esp_secure_cert_mgr)
+project that is newer than the one automatically downloaded into the `managed_components/` directory during a build
+of the broader iot-reference-esp32c3 project, you may have to add the `--priv_key_algo` argument
+(ex: `--priv_key_algo RSA 2048`). Alternatively, use an older esp_secure_cert_mgr such as
+[v2.2.0](https://github.com/espressif/esp_secure_cert_mgr/releases/tag/v2.2.0).
 
 ### USB Driver
 
