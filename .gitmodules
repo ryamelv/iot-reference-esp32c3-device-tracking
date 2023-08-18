@@ -10,3 +10,6 @@
 [submodule "components/core2forAWS"]
 	path = components/core2forAWS
 	url = https://github.com/ryamelv/core2forAWS.git
+[submodule "components/lvgl_esp32_drivers"]
+	path = components/lvgl_esp32_drivers
+	url = https://github.com/ryamelv/lvgl_esp32_drivers.git
