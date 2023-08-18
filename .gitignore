@@ -1,8 +1,9 @@
+**/.DS_Store
 .idea/
 build/
-**/.DS_Store
 main/certs/
 esp_ds_data/
+cmake-build-*/
 managed_components/
 dependencies.lock
 sdkconfig
